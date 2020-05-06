@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import com.google.gson.Gson;
@@ -44,22 +45,27 @@ public class Utils {
 	
 	public static List<String> getDates(int num){
 		List<String> dateList = new ArrayList<String>();
-		String startDate = "2020-04-20";
-		String enddate = "2017-05-20";
-		
-		LocalDate startDateLocal = LocalDate.parse(startDate);
-		LocalDate enddateLocal = LocalDate.parse(enddate);
-		
-		long noOfDaysBetween = ChronoUnit.DAYS.between(startDateLocal, enddateLocal);
-		int delta = (int) (noOfDaysBetween/num);
-		
 		for (int i = 0; i < num; i++) {
-			String d = startDateLocal.toString()+"T08:00:00Z";
+			String d = getRandDate().toString()+"T08:00:00Z";
 			dateList.add(d);
-			startDateLocal.plusDays(delta);
 		}
 		return dateList;
-		
+	}
+	
+	public static LocalDate getRandDate() {
+
+		LocalDate endDate = LocalDate.now();
+		LocalDate startDate = endDate.minusDays(20);
+		ArrayList<LocalDate> dates = new ArrayList<LocalDate>();
+		while(!startDate.isAfter(endDate)) {
+			dates.add(startDate);
+			startDate = startDate.plusDays(1);
+		}
+
+		Random rand = new Random();
+		int randInt = rand.nextInt(dates.size());
+
+		return dates.get(randInt);
 	}
 	
 }

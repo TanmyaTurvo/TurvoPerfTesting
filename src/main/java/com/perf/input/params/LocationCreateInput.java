@@ -14,7 +14,7 @@ public class LocationCreateInput {
 	InputEntries input = new InputEntries();
 	private String domain = input.domain;
 	public String url = domain + "/api/locations/?fullResponse=true";
-	public String filePath = "/Users/isaac.t/Downloads/simplemaps_uscities_basicv1.6/uscities_copy.csv";
+	public String filePath = "/Users/tanmya.c/Downloads/uscities_copy.csv";
 	public String newFileName = "LocationIDs.txt";
 	
 	public int users = 1;
