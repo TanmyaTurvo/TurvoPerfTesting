@@ -32,13 +32,13 @@ class MultithreadInvoice extends Thread{
 			AccountDetails accountDetails = accountDetailList.get(i);
 			try {
 				HttpConnection httpConnection = new HttpConnection();
-				HttpURLConnection conn = httpConnection.httpPostConnection(customerInvoiceInput.getUri(accountDetails), "");
+				HttpURLConnection conn = httpConnection.httpPostConnection(customerInvoiceInput.getUrl(accountDetails), "");
 				if(conn.getResponseCode()!=200) {
 					System.out.println("Error Response Code");
 					if(conn.getResponseCode()==401) {
 						System.out.println("Auth token expired. Generating again");
 						AuthToken.setAuthToken(input.authUrl);
-						conn = httpConnection.httpPostConnection(customerInvoiceInput.getUri(accountDetails), "");
+						conn = httpConnection.httpPostConnection(customerInvoiceInput.getUrl(accountDetails), "");
 					}
 				}
 				BufferedReader br;

@@ -14,7 +14,7 @@ public class CustomerInvoiceInput {
 	public static int invoiceThreadCount = 5;
 	public String url = input.domain + "/api/documents?attributes=";
 	
-	public String getUri(AccountDetails accountDetails) throws UnsupportedEncodingException {
+	public String getUrl(AccountDetails accountDetails) throws UnsupportedEncodingException {
 		return url + invoiceAttributes(accountDetails) + "&fullResponse=true&context=" + invoiceContext(accountDetails);
 	}
 	
