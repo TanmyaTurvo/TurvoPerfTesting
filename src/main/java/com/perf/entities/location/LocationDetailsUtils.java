@@ -11,14 +11,8 @@ import com.google.gson.Gson;
 
 public class LocationDetailsUtils {
 
-	public String fileName;
-	public Gson g;
-
-	public LocationDetailsUtils() {
-		String fileName = "LocationIDs.txt";
-		Gson g = new Gson();
-	}
-
+	public String fileName = "LocationIDs.txt";
+	public Gson g = new Gson();
 
 	//Taking first numRows records
 	public List<String> getLocationRows(int numRows) throws IOException{

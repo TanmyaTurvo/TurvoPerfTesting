@@ -28,7 +28,6 @@ import java.lang.reflect.Type;
 class Multithread extends Thread{
 	List<String> locationIds = Collections.synchronizedList(new ArrayList<String>());
 	List<String> locationDetails = Collections.synchronizedList(new ArrayList<String>());
-	List<String> finalLocationIds = Collections.synchronizedList(new ArrayList<String>());
 	LocationCreateInput locationCreateInput = new LocationCreateInput();
 	InputEntries input = new InputEntries();
 	static ArrayList<List<String>> locationInfo;
@@ -64,7 +63,6 @@ class Multithread extends Thread{
 				}
 				
 				locationIds.add(Utils.getValueFromJson(sb, "locationId"));
-				finalLocationIds.add(Utils.getValueFromJson(sb, "locationId"));
 				
 				Map<String, Object> locDetails = new HashMap<String, Object>();
 				locDetails.put("locationId", Utils.getValueFromJson(sb, "locationId"));
@@ -79,8 +77,9 @@ class Multithread extends Thread{
 			}
 			if(locationIds.size() == locationCreateInput.batchSize  ||
 					count == locationCreateInput.users * locationCreateInput.iterations) {
-				LocationCreate.locationIdWrite(locationIds);
+				LocationCreate.locationIdWrite(locationDetails);
 				locationIds = Collections.synchronizedList(new ArrayList<String>());
+				locationDetails = Collections.synchronizedList(new ArrayList<String>());
 			}
 		}
 	}

@@ -7,15 +7,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.perf.utils.Utils;
 
 public class AuthToken {
 	public static String authTokenVal;
 	public static String getAuthToken(String authUrl) {
-	
 		String authToken = null;
 		try {
 			URL url = new URL(authUrl);
@@ -35,11 +31,7 @@ public class AuthToken {
 			while ((output = br.readLine()) != null) {
 				sb.append(output);
 			}
-			JsonParser parser = new JsonParser();
-			JsonElement jsonTree = parser.parse(sb.toString());
-			JsonObject jsonObject = jsonTree.getAsJsonObject();
-			JsonElement accessToken = jsonObject.get("access_token");
-			authToken = accessToken.toString();
+			authToken = Utils.getValueFromJson(sb, "access_token");
 			conn.disconnect();
 		}
 		catch (MalformedURLException e) {
