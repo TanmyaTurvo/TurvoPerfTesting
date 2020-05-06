@@ -10,9 +10,8 @@ import com.perf.utils.Utils;
 
 public class AssetBatchPostingInput {
 	InputEntries input = new InputEntries();
-	public String url = input.domain + "/api/network/asset-batches";
-	public String inputFile = "LocationIDs.txt";
-	public int assetPostingThreads = 5;
+	public String url = input.domain + "/api/network/capacity/asset-batches";
+	public int assetPostingThreads = 1;
 	public long carrierId = 65;
 
 	public String getAssetBatchPostingPostData(List<Double> originCoords, List<Double> destinationCoords, 
@@ -21,10 +20,12 @@ public class AssetBatchPostingInput {
 		Map<String, Object> mainMap = new HashMap<>();
 		Map<String, Object> map = new HashMap<>();
 
-		Map<String, Object> networks = new HashMap<>();
-		networks.put("id", 3369119);
-		networks.put("key", "assetSource.network");
-		networks.put("value", "My network");
+		List<Map<String, Object>> networks = new ArrayList<Map<String, Object>>();
+		Map<String, Object> network = new HashMap<>();
+		network.put("id", 3369119);
+		network.put("key", "assetSource.network");
+		network.put("value", "My network");
+		networks.add(network);
 
 		List<Map<String, Object>> assets = new ArrayList<>();
 		for (int i = 0; i <= 2; i++) {
@@ -57,7 +58,7 @@ public class AssetBatchPostingInput {
 			Map<String,Object> destinationGPS = new HashMap<>();
 			List<Double> destinationCoordinates = destinationCoords;
 			destinationGPS.put("coordinates", destinationCoordinates);
-			origin.put("gps", destinationGPS);
+			destination.put("gps", destinationGPS);
 
 			Map<String,Object> equipment = new HashMap<>();
 			Map<String,Object> equipmentType = new HashMap<>();
@@ -87,7 +88,8 @@ public class AssetBatchPostingInput {
 		mainMap.put("networks", networks);
 		mainMap.put("assets", assets);
 
-		String json = Utils.mapToJson(mainMap);
+		String json = Utils.mapToJson(mainMap);		
+		
 		return json;
 
 	}

@@ -79,8 +79,9 @@ class Multithread extends Thread{
 			}
 			if(locationIds.size() == locationCreateInput.batchSize  ||
 					count == locationCreateInput.users * locationCreateInput.iterations) {
-				LocationCreate.locationIdWrite(locationIds);
+				LocationCreate.locationIdWrite(locationDetails);
 				locationIds = Collections.synchronizedList(new ArrayList<String>());
+				locationDetails = Collections.synchronizedList(new ArrayList<String>());
 			}
 		}
 	}
