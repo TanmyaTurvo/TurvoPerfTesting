@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.perf.utils.Utils;
-import com.perf.vo.AccountDetails;
+import com.perf.vo.ShipmentDetails;
 
 
 public class CustomerInvoiceInput {
@@ -14,17 +14,17 @@ public class CustomerInvoiceInput {
 	public static int invoiceThreadCount = 5;
 	public String url = input.domain + "/api/documents?attributes=";
 	
-	public String getUrl(AccountDetails accountDetails) throws UnsupportedEncodingException {
-		return url + invoiceAttributes(accountDetails) + "&fullResponse=true&context=" + invoiceContext(accountDetails);
+	public String getUrl(ShipmentDetails shipmentDetails) throws UnsupportedEncodingException {
+		return url + invoiceAttributes(shipmentDetails) + "&fullResponse=true&context=" + invoiceContext(shipmentDetails);
 	}
 	
-	public String invoiceAttributes(AccountDetails accountDetails) throws UnsupportedEncodingException {
+	public String invoiceAttributes(ShipmentDetails shipmentDetails) throws UnsupportedEncodingException {
 		Map<String, Object> mainMap = new HashMap<>();
 		mainMap.put("lookupId", "3361751");
 		mainMap.put("create", true);
 		Map<String, Object> map = new HashMap<>();
-		map.put("id", Integer.parseInt(accountDetails.getCustomerOrderId()));
-		map.put("accountId", Integer.parseInt(accountDetails.getAccountId()));
+		map.put("id", Integer.parseInt(shipmentDetails.getCustomer_order_id()));
+		map.put("accountId", Integer.parseInt(shipmentDetails.getCustomerId()));
 		map.put("type", "CUSTOMERORDER");
 		mainMap.put("account", map);
 		mainMap.put("invoice_date", "2020-02-25");
@@ -41,9 +41,9 @@ public class CustomerInvoiceInput {
 		return URLEncoder.encode(uriString,"UTF-8");
 	}
 	
-	public String invoiceContext(AccountDetails accountDetails) throws UnsupportedEncodingException {
+	public String invoiceContext(ShipmentDetails shipmentDetails) throws UnsupportedEncodingException {
 		Map<String, Object> mainMap = new HashMap<>();
-		mainMap.put("id", Integer.parseInt(accountDetails.getShipmentId()));
+		mainMap.put("id", Integer.parseInt(shipmentDetails.getShipmentId()));
 		mainMap.put("type", "SHIPMENT");
 		
 		String uriString = Utils.mapToJson(mainMap);

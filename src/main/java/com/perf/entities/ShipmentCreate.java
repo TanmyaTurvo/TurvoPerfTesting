@@ -10,29 +10,31 @@ import java.util.Random;
 
 import com.perf.authentication.AuthToken;
 import com.perf.connection.HttpConnection;
+import com.perf.entities.location.LocationCreate;
 import com.perf.entities.location.LocationDetailsUtils;
 import com.perf.input.params.InputEntries;
 import com.perf.input.params.LocationCreateInput;
 import com.perf.input.params.ShipmentCreateInput;
 import com.perf.utils.Utils;
-import com.perf.vo.AccountDetails;
+import com.perf.vo.ShipmentDetails;
 
 public class ShipmentCreate {
 	
 	ShipmentCreateInput shipmentCreateInput = new ShipmentCreateInput();
 	InputEntries input = new InputEntries();
 	
-	public List<AccountDetails> shipmentCreate(List<String> accountIdList) {
-		List<AccountDetails> accountDetailList = new ArrayList<>();
+	public List<ShipmentDetails> shipmentCreate(List<String> accountIdList) {
+		List<ShipmentDetails> shipmentDetailsList = new ArrayList<>();
 		HttpConnection httpConnection = new HttpConnection();
 		Random rand = new Random();
 		for(int i=0; i<ShipmentCreateInput.shipmentCount; i++) {
 			String currShipmentId = null;
 			String currCustomerOrderId = null;
-			String accountId =  accountIdList.get(rand.nextInt(accountIdList.size()));
-			String currUrl = shipmentCreateInput.url + accountId;
-			HttpURLConnection conn = httpConnection.httpPostConnection(currUrl, shipmentCreateInput.getShipmentPayload());
+			String customerId =  accountIdList.get(rand.nextInt(accountIdList.size()));
+			String currUrl = shipmentCreateInput.url + customerId;
+			
 			try {
+				HttpURLConnection conn = httpConnection.httpPostConnection(currUrl, shipmentCreateInput.getShipmentPayload());
 				if(conn.getResponseCode()!=200) {
 					System.out.println("Error Response Code");
 					if(conn.getResponseCode()==401) {
@@ -55,21 +57,24 @@ public class ShipmentCreate {
 				ShipmentCreateLineItem shipmentCreateLineItem = new ShipmentCreateLineItem();
 				shipmentCreateLineItem.setShipmentCreateLineItem(currShipmentId, currCustomerOrderId);
 				
-				AccountDetails accountDetails = new AccountDetails(null, accountId, currShipmentId, currCustomerOrderId);
-				accountDetailList.add(accountDetails);
+				ShipmentDetails shipmentDetails = new ShipmentDetails();
+				shipmentDetails.setCustomer_order_id(currCustomerOrderId);
+				shipmentDetails.setCustomerId(customerId);
+				shipmentDetails.setShipmentId(currShipmentId);
+				shipmentDetailsList.add(shipmentDetails);
 				
 			} catch (Exception e){				
 				System.out.println("Exception.");
 				e.printStackTrace();
 			}
 		}
-		return accountDetailList;
+		return shipmentDetailsList;
 		
 	}
 	
-	public List<AccountDetails> connect() throws IOException {
+	public List<ShipmentDetails> connect() throws IOException {
 		AuthToken.setAuthToken(input.authUrl);
-		//LocationCreateInput location = new LocationCreateInput();
+		//LocationCreate.connect(); //remove if new locations not required
 		LocationDetailsUtils locationDetailsUtils = new LocationDetailsUtils();
 		ShipmentCreateInput.locationIdList = locationDetailsUtils.getLocationIds();
 		CustomerCreate customerCreate = new CustomerCreate();

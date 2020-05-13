@@ -53,8 +53,9 @@ public class CustomerCreate {
 		}
 		System.out.println("Account Ids:");
 		for(int i=0;i<accountIdList.size();i++) {
-			System.out.println(accountIdList.get(i));
+			System.out.print(accountIdList.get(i)+ " ");
 		}
+		System.out.println();
 		return accountIdList;
 		
 	}

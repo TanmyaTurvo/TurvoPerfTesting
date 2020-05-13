@@ -10,6 +10,7 @@ import com.perf.connection.HttpConnection;
 import com.perf.input.params.FindCarrierInput;
 import com.perf.input.params.InputEntries;
 
+
 class MultithreadCarrier extends Thread{
 	FindCarrierInput findCarrierInput = new FindCarrierInput();
 	InputEntries input = new InputEntries();
@@ -47,7 +48,6 @@ class MultithreadCarrier extends Thread{
 public class FindCarrier {
 	FindCarrierInput findCarrierInput = new FindCarrierInput();
 	InputEntries input = new InputEntries();
-	
 	public void connect() throws UnsupportedEncodingException {
 		AuthToken.setAuthToken(input.authUrl);
 		findCarrierInput.setUrl();
@@ -61,7 +61,7 @@ public class FindCarrier {
 		FindCarrier findCarrier = new FindCarrier();
 		try {
 			findCarrier.connect();
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

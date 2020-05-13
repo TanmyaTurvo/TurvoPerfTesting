@@ -13,8 +13,8 @@ import com.perf.utils.Utils;
 
 public class FindCarrierInput {
 	InputEntries input = new InputEntries();
-	public int threads = 5;
-	public int iterations = 10;
+	public int threads = 1;
+	public int iterations = 1;
 	public String tempUrl = input.domain + "/api/network/available-assets?context=";
 	public static String url;
 	
@@ -78,4 +78,5 @@ public class FindCarrierInput {
 		String json = Utils.mapToJson(filterMap);
 		return URLEncoder.encode(json,"UTF-8");
 	}
+	
 }

@@ -11,11 +11,11 @@ import com.perf.connection.HttpConnection;
 import com.perf.input.params.CustomerInvoiceInput;
 import com.perf.input.params.InputEntries;
 import com.perf.input.params.ShipmentCreateInput;
-import com.perf.vo.AccountDetails;
+import com.perf.vo.ShipmentDetails;
 
 class MultithreadInvoice extends Thread{
 	CustomerInvoiceInput customerInvoiceInput = new CustomerInvoiceInput();
-	List<AccountDetails> accountDetailList;
+	List<ShipmentDetails> shipmentDetailList;
 	InputEntries input = new InputEntries();
 	static int count = -1;
 	public void run() {
@@ -28,17 +28,17 @@ class MultithreadInvoice extends Thread{
 		int endIndex = startIndex + iterations;
 		System.out.println(loopThread + ", " + startIndex + ", " + endIndex);
 		for (int i=startIndex ; i<endIndex; i++) {
-			accountDetailList = CustomerInvoiceCreate.shipmentIdList;
-			AccountDetails accountDetails = accountDetailList.get(i);
+			shipmentDetailList = CustomerInvoiceCreate.shipmentIdList;
+			ShipmentDetails shipmentDetails = shipmentDetailList.get(i);
 			try {
 				HttpConnection httpConnection = new HttpConnection();
-				HttpURLConnection conn = httpConnection.httpPostConnection(customerInvoiceInput.getUrl(accountDetails), "");
+				HttpURLConnection conn = httpConnection.httpPostConnection(customerInvoiceInput.getUrl(shipmentDetails), "");
 				if(conn.getResponseCode()!=200) {
 					System.out.println("Error Response Code");
 					if(conn.getResponseCode()==401) {
 						System.out.println("Auth token expired. Generating again");
 						AuthToken.setAuthToken(input.authUrl);
-						conn = httpConnection.httpPostConnection(customerInvoiceInput.getUrl(accountDetails), "");
+						conn = httpConnection.httpPostConnection(customerInvoiceInput.getUrl(shipmentDetails), "");
 					}
 				}
 				BufferedReader br;
@@ -62,7 +62,7 @@ class MultithreadInvoice extends Thread{
 public class CustomerInvoiceCreate {
 	
 	InputEntries input = new InputEntries();
-	public static List<AccountDetails> shipmentIdList;
+	public static List<ShipmentDetails> shipmentIdList;
 	
 	public void connect() throws IOException {
 		AuthToken.setAuthToken(input.authUrl);

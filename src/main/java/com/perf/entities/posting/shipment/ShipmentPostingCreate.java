@@ -11,7 +11,7 @@ import com.perf.connection.HttpConnection;
 import com.perf.entities.ShipmentCreate;
 import com.perf.input.params.InputEntries;
 import com.perf.input.params.ShipmentPostingInput;
-import com.perf.vo.AccountDetails;
+import com.perf.vo.ShipmentDetails;
 
 public class ShipmentPostingCreate {
 	
@@ -45,8 +45,8 @@ public class ShipmentPostingCreate {
 
 	public void connect() throws IOException {
 		ShipmentCreate shipmentCreate = new ShipmentCreate();
-		List<AccountDetails> accountIdList = shipmentCreate.connect();
-		for(AccountDetails accountDetail : accountIdList) {
+		List<ShipmentDetails> shipmentDetailsList = shipmentCreate.connect();
+		for(ShipmentDetails accountDetail : shipmentDetailsList) {
 			postShipment(accountDetail.getShipmentId());
 		}
 	}
