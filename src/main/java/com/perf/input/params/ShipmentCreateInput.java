@@ -8,12 +8,16 @@ import java.util.Map;
 import java.util.Random;
 
 import com.perf.utils.Utils;
+import com.perf.vo.ShipmentFunctionEnum;
 
 public class ShipmentCreateInput {
 	
 	InputEntries input = new InputEntries();
 	public String url = input.domain+"/api/shipments?customerId=";
 	public static int shipmentCount = 5;
+	public static int shipmentThreadCount = 5;
+	
+	public static ShipmentFunctionEnum shipmentFunction = ShipmentFunctionEnum.SHIPMENT_POSTING;
 	
 	public static List<String> locationIdList;
 	public String getLineItemUrl(String shipmentId) {

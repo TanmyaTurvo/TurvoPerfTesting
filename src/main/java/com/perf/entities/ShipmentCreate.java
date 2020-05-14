@@ -12,25 +12,36 @@ import com.perf.authentication.AuthToken;
 import com.perf.connection.HttpConnection;
 import com.perf.entities.location.LocationCreate;
 import com.perf.entities.location.LocationDetailsUtils;
+import com.perf.entities.posting.shipment.ShipmentPostingCreate;
 import com.perf.input.params.InputEntries;
 import com.perf.input.params.LocationCreateInput;
 import com.perf.input.params.ShipmentCreateInput;
 import com.perf.utils.Utils;
 import com.perf.vo.ShipmentDetails;
+import com.perf.vo.ShipmentFunctionEnum;
 
-public class ShipmentCreate {
+public class ShipmentCreate extends Thread{
+	
+	private static List<String> customerAccountIdList;
+	private static List<ShipmentDetails> shipmentDetailsList = new ArrayList<>();
 	
 	ShipmentCreateInput shipmentCreateInput = new ShipmentCreateInput();
 	InputEntries input = new InputEntries();
+	ShipmentPostingCreate shipmentPostingCreate = new ShipmentPostingCreate();
 	
-	public List<ShipmentDetails> shipmentCreate(List<String> accountIdList) {
-		List<ShipmentDetails> shipmentDetailsList = new ArrayList<>();
+	
+	public void run() {
+		shipmentCreate();
+	}
+	
+	public void shipmentCreate() {
+		
 		HttpConnection httpConnection = new HttpConnection();
 		Random rand = new Random();
 		for(int i=0; i<ShipmentCreateInput.shipmentCount; i++) {
 			String currShipmentId = null;
 			String currCustomerOrderId = null;
-			String customerId =  accountIdList.get(rand.nextInt(accountIdList.size()));
+			String customerId =  customerAccountIdList.get(rand.nextInt(customerAccountIdList.size()));
 			String currUrl = shipmentCreateInput.url + customerId;
 			
 			try {
@@ -48,7 +59,7 @@ public class ShipmentCreate {
 				
 				StringBuilder sb = new StringBuilder();
 				while((output = br.readLine())!=null) {
-					System.out.println(output);
+					System.out.println("SHIPMENT: " + output);
 					sb.append(output);
 				}
 				currShipmentId = Utils.getValueFromJson(sb, "shipmentId");
@@ -63,23 +74,30 @@ public class ShipmentCreate {
 				shipmentDetails.setShipmentId(currShipmentId);
 				shipmentDetailsList.add(shipmentDetails);
 				
+				if(ShipmentCreateInput.shipmentFunction == ShipmentFunctionEnum.SHIPMENT_POSTING) {
+					shipmentPostingCreate.postShipment(currShipmentId);
+				}
+				
+				
 			} catch (Exception e){				
 				System.out.println("Exception.");
 				e.printStackTrace();
 			}
 		}
-		return shipmentDetailsList;
-		
 	}
 	
 	public List<ShipmentDetails> connect() throws IOException {
 		AuthToken.setAuthToken(input.authUrl);
-		//LocationCreate.connect(); //remove if new locations not required
+		LocationCreate.connect();
 		LocationDetailsUtils locationDetailsUtils = new LocationDetailsUtils();
 		ShipmentCreateInput.locationIdList = locationDetailsUtils.getLocationIds();
 		CustomerCreate customerCreate = new CustomerCreate();
-		List<String> customerAccountIdList = customerCreate.connect();
-		return shipmentCreate(customerAccountIdList);
+		customerAccountIdList = customerCreate.connect();
+		for(int i=0; i<ShipmentCreateInput.shipmentThreadCount ;i++) {
+			ShipmentCreate shipmentCreate = new ShipmentCreate();
+			shipmentCreate.start();
+		}
+		return shipmentDetailsList;
 	}
 	
 	public static void main(String[] args) {

@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
  * Creates a file LocationIDs.txt with all the location ids generated 
  */
 
-class Multithread extends Thread{
+class Locations{
 	List<String> locationIds = Collections.synchronizedList(new ArrayList<String>());
 	List<String> locationDetails = Collections.synchronizedList(new ArrayList<String>());
 	LocationCreateInput locationCreateInput = new LocationCreateInput();
@@ -37,8 +37,8 @@ class Multithread extends Thread{
 	
 	static int count = 0;
 	
-	public void run() {
-		for(int i=0 ; i< locationCreateInput.iterations ;i++) {
+	public void createLocations() {
+		for(int i=0 ; i< locationCreateInput.locationCount ;i++) {
 			count+=1;
 			try {
 				Random rand = new Random();
@@ -58,7 +58,7 @@ class Multithread extends Thread{
 				String output;
 				StringBuilder sb = new StringBuilder();
 				while((output = br.readLine())!=null) {
-					System.out.println(output);
+					System.out.println("LOCATION: " + output);
 					sb.append(output);
 				}
 				
@@ -76,7 +76,7 @@ class Multithread extends Thread{
 				e.printStackTrace();
 			}
 			if(locationIds.size() == locationCreateInput.batchSize  ||
-					count == locationCreateInput.users * locationCreateInput.iterations) {
+					count == locationCreateInput.locationCount) {
 				LocationCreate.locationIdWrite(locationDetails);
 				locationIds = Collections.synchronizedList(new ArrayList<String>());
 				locationDetails = Collections.synchronizedList(new ArrayList<String>());
@@ -128,11 +128,9 @@ public class LocationCreate {
 	
 	public static void connect() throws IOException {
 		AuthToken.setAuthToken(inputEntries.authUrl);
-		Multithread.locationInfo = locationCreateInput.getInfo();
-		for(int i = 0; i<locationCreateInput.users; i++) {
-			Multithread multithread = new Multithread();
-			multithread.start();
-		}
+		Locations.locationInfo = locationCreateInput.getInfo();
+		Locations locations = new Locations();
+		locations.createLocations();
 	}
 	
 	public static void main(String[] args) {

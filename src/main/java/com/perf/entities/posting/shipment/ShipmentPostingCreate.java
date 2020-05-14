@@ -34,7 +34,7 @@ public class ShipmentPostingCreate {
 				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				String output;
 				while((output = br.readLine())!=null) {
-					System.out.println(output);
+					System.out.println("SHIPMENTPOSTING: " + output);
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
@@ -44,6 +44,7 @@ public class ShipmentPostingCreate {
 	}
 
 	public void connect() throws IOException {
+		AuthToken.setAuthToken(input.authUrl);
 		ShipmentCreate shipmentCreate = new ShipmentCreate();
 		List<ShipmentDetails> shipmentDetailsList = shipmentCreate.connect();
 		for(ShipmentDetails accountDetail : shipmentDetailsList) {

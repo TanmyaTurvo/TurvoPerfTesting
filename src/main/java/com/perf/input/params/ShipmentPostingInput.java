@@ -12,7 +12,7 @@ public class ShipmentPostingInput {
 	InputEntries input = new InputEntries();
 	public String url = input.domain + "/api/shipment-postings";
 	public String inputFile = "LocationIDs.txt";
-	public int shipmentPostingLoop = 5;
+	public int shipmentPostingLoop = 1;
 	
 	public String getShipmentPostingPostData(String shipmentId) {
 		

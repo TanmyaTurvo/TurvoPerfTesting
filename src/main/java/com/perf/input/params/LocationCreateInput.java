@@ -17,8 +17,7 @@ public class LocationCreateInput {
 	public String filePath = "/Users/isaac.t/Downloads/simplemaps_uscities_basicv1.6/uscities_copy.csv";
 	public String newFileName = "LocationIDs.txt";
 	
-	public int users = 1;
-	public int iterations = 5;
+	public int locationCount = 10;
 	public int batchSize = 5;
 	
 	public ArrayList<List<String>> getInfo() throws IOException {

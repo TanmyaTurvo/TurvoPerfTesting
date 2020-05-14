@@ -41,7 +41,7 @@ public class CustomerCreate {
 				
 				StringBuilder sb = new StringBuilder();
 				while((output = br.readLine())!=null) {
-					System.out.println(output);
+					System.out.println("CUSTOMER: " + output);
 					sb.append(output);
 				}
 				accountIdList.add(Utils.getValueFromJson(sb, "accountId"));
