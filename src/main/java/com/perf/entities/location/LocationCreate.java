@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.perf.authentication.AuthToken;
 import com.perf.connection.HttpConnection;
@@ -25,7 +28,7 @@ import java.lang.reflect.Type;
  * Creates a file LocationIDs.txt with all the location ids generated 
  */
 
-class Locations{
+class Locations extends Thread{
 	List<String> locationIds = Collections.synchronizedList(new ArrayList<String>());
 	List<String> locationDetails = Collections.synchronizedList(new ArrayList<String>());
 	LocationCreateInput locationCreateInput = new LocationCreateInput();
@@ -37,7 +40,7 @@ class Locations{
 	
 	static int count = 0;
 	
-	public void createLocations() {
+	public void run() {
 		for(int i=0 ; i< locationCreateInput.locationCount ;i++) {
 			count+=1;
 			try {
@@ -75,8 +78,8 @@ class Locations{
 				System.out.println("Exception.");
 				e.printStackTrace();
 			}
-			if(locationIds.size() == locationCreateInput.batchSize  ||
-					count == locationCreateInput.locationCount) {
+			if(locationCreateInput.batchSize == locationIds.size() ||
+					locationCreateInput.locationThreadCount * locationCreateInput.locationCount == count) {
 				LocationCreate.locationIdWrite(locationDetails);
 				locationIds = Collections.synchronizedList(new ArrayList<String>());
 				locationDetails = Collections.synchronizedList(new ArrayList<String>());
@@ -91,18 +94,17 @@ public class LocationCreate {
 	static boolean newFile = true;
 	
 	public static void locationIdWrite(List<String> locationDetails) {
-		System.out.println("Location Id List:");
-		for(String s : locationDetails) {
-			System.out.print(s + " ");
-		}
-		System.out.println();
-		
 		if(newFile) {
 			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(locationCreateInput.newFileName));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(locationCreateInput.locationFileName));
 				for(String s : locationDetails) {
-					writer.write(s);
-					writer.write("\n");
+					try{
+						JsonParser parser = new JsonParser();
+						parser.parse(s);
+						writer.write(s);
+						writer.write("\n");
+					} 
+					catch(JsonSyntaxException e){}
 				}
 				writer.close();
 				
@@ -113,10 +115,15 @@ public class LocationCreate {
 		}
 		else {
 			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(locationCreateInput.newFileName,true));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(locationCreateInput.locationFileName,true));
 				for(String s : locationDetails) {
-					writer.append(s);
-					writer.append("\n");
+					try{
+						JsonParser parser = new JsonParser();
+						parser.parse(s);
+						writer.write(s);
+						writer.write("\n");
+					} 
+					catch(JsonSyntaxException e){}
 				}
 				writer.close();
 			} catch (IOException e) {
@@ -129,8 +136,10 @@ public class LocationCreate {
 	public static void connect() throws IOException {
 		AuthToken.setAuthToken(inputEntries.authUrl);
 		Locations.locationInfo = locationCreateInput.getInfo();
-		Locations locations = new Locations();
-		locations.createLocations();
+		for (int i=0; i<locationCreateInput.locationThreadCount; i++) {
+			Locations locations = new Locations();
+			locations.start();
+		}
 	}
 	
 	public static void main(String[] args) {

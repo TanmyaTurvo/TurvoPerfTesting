@@ -65,8 +65,8 @@ public class ShipmentCreate extends Thread{
 				currShipmentId = Utils.getValueFromJson(sb, "shipmentId");
 				currCustomerOrderId = Utils.getValueFromJson(sb, "customer_order_id");
 				
-				ShipmentCreateLineItem shipmentCreateLineItem = new ShipmentCreateLineItem();
-				shipmentCreateLineItem.setShipmentCreateLineItem(currShipmentId, currCustomerOrderId);
+				//ShipmentCreateLineItem shipmentCreateLineItem = new ShipmentCreateLineItem();
+				//shipmentCreateLineItem.setShipmentCreateLineItem(currShipmentId, currCustomerOrderId);
 				
 				ShipmentDetails shipmentDetails = new ShipmentDetails();
 				shipmentDetails.setCustomer_order_id(currCustomerOrderId);
@@ -88,7 +88,7 @@ public class ShipmentCreate extends Thread{
 	
 	public List<ShipmentDetails> connect() throws IOException {
 		AuthToken.setAuthToken(input.authUrl);
-		LocationCreate.connect();
+		//LocationCreate.connect();
 		LocationDetailsUtils locationDetailsUtils = new LocationDetailsUtils();
 		ShipmentCreateInput.locationIdList = locationDetailsUtils.getLocationIds();
 		CustomerCreate customerCreate = new CustomerCreate();

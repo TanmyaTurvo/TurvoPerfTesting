@@ -15,9 +15,10 @@ public class LocationCreateInput {
 	private String domain = input.domain;
 	public String url = domain + "/api/locations/?fullResponse=true";
 	public String filePath = "/Users/isaac.t/Downloads/simplemaps_uscities_basicv1.6/uscities_copy.csv";
-	public String newFileName = "LocationIDs.txt";
+	public String locationFileName = "LocationIDs.txt";
 	
 	public int locationCount = 10;
+	public int locationThreadCount = 5;
 	public int batchSize = 5;
 	
 	public ArrayList<List<String>> getInfo() throws IOException {
@@ -37,7 +38,7 @@ public class LocationCreateInput {
 	public List<String> getLocationIds() throws IOException{
 		String row;
 		List<String> list = new ArrayList<>();
-		BufferedReader reader = new BufferedReader(new FileReader(newFileName));
+		BufferedReader reader = new BufferedReader(new FileReader(locationFileName));
 		while ((row = reader.readLine()) != null) {
 		    list.add(row);
 		}

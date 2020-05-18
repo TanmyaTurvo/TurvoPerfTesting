@@ -14,8 +14,8 @@ public class ShipmentCreateInput {
 	
 	InputEntries input = new InputEntries();
 	public String url = input.domain+"/api/shipments?customerId=";
-	public static int shipmentCount = 5;
-	public static int shipmentThreadCount = 5;
+	public static int shipmentCount = 1000;
+	public static int shipmentThreadCount = 16;
 	
 	public static ShipmentFunctionEnum shipmentFunction = ShipmentFunctionEnum.SHIPMENT_POSTING;
 	
@@ -31,8 +31,8 @@ public class ShipmentCreateInput {
 		Random random = new Random();
 		mainMap.put("lane_start", locationIdList.get(random.nextInt(locationIdList.size())));
 		mainMap.put("lane_end", locationIdList.get(random.nextInt(locationIdList.size())));
-		mainMap.put("start_date", date);
-		mainMap.put("end_date", date.plusDays(1));
+		mainMap.put("start_date", date.toString());
+		mainMap.put("end_date", date.plusDays(1).toString());
 		List<String> list = new ArrayList<>();
 		list.add("100026");
 		mainMap.put("equipment_type", list);

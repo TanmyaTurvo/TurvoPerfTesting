@@ -19,8 +19,8 @@ public class ShipmentPostingInput {
 		Map<String, Object> mainMap = new HashMap<>();
 		Map<String, Object> map = new HashMap<>();
 		Map<String, Object> subMap = new HashMap<>();
-		subMap.put("id", 8829531);
-		subMap.put("key", "priceOption.shipmentPosting.minCarrierPay");
+		subMap.put("id", 10713251);
+		subMap.put("key", "priceOption.minCarrierPay");
 		subMap.put("value", "Min pay");
 		map.put("type", subMap);
 		
@@ -39,6 +39,11 @@ public class ShipmentPostingInput {
 		mainMap.put("requestPrice", map);
 		
 		List<Map<String,Object>> list = new ArrayList<>();
+		Map<String, Object> networks = new HashMap<>();
+		networks.put("id", 10713254L);
+		networks.put("key", "shipmentSource.network");
+		networks.put("value", "My network");
+		list.add(networks);
 		mainMap.put("networks",list);
 		
 		map=new HashMap<>();

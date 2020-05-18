@@ -8,15 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
+import com.perf.input.params.LocationCreateInput;
 
 public class LocationDetailsUtils {
-
-	public String locationFileName;
+	LocationCreateInput locationCreateInput = new LocationCreateInput();
 	public String coordsFileName;
 	public Gson g;
 
 	public LocationDetailsUtils() {
-		locationFileName = "LocationIDs.txt";
 		coordsFileName = "LocationCoords.txt";
 		g = new Gson();
 	}
@@ -25,7 +24,7 @@ public class LocationDetailsUtils {
 	public List<String> getLocationRows(int numRows) throws IOException{
 		String row;
 		List<String> list = new ArrayList<>();
-		BufferedReader reader = new BufferedReader(new FileReader(locationFileName));
+		BufferedReader reader = new BufferedReader(new FileReader(locationCreateInput.locationFileName));
 		while ((row = reader.readLine()) != null && numRows > 0) {
 			list.add(row);
 			numRows--; //Assuming numRows <= Number of rows in the File
@@ -38,7 +37,7 @@ public class LocationDetailsUtils {
 	public List<String> getLocationRows() throws IOException{
 		String row;
 		List<String> list = new ArrayList<>();
-		BufferedReader reader = new BufferedReader(new FileReader(locationFileName));
+		BufferedReader reader = new BufferedReader(new FileReader(locationCreateInput.locationFileName));
 		while ((row = reader.readLine()) != null) {
 			list.add(row);
 		}
@@ -57,6 +56,7 @@ public class LocationDetailsUtils {
 		List<String> locationIdList = new ArrayList<>();
 		for(String s : locationRecords) {
 			Map<String, Object> locationMap = new HashMap<String, Object>();
+			System.out.println("STRING: " + s);
 			locationMap = g.fromJson(s, locationMap.getClass());
 			locationIdList.add(locationMap.get("locationId").toString());
 		}
